@@ -13,11 +13,7 @@ export function Portfolio3D() {
 
   return (
     <div className="wes-portfolio-3d-shell" aria-hidden>
-      <div
-        id="portfolio-3d"
-        ref={ref}
-        style={{ background: "transparent" }}
-      />
+      <div id="portfolio-3d" ref={ref} style={{ background: "transparent" }} />
     </div>
   );
 }

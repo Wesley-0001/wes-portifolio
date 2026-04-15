@@ -20,6 +20,7 @@ import { InteractiveWebBackground } from "./InteractiveWebBackground";
 import { Portfolio3D } from "./Portfolio3D";
 import ContactSection from "@/components/contact/ContactSection";
 import Footer from "@/components/contact/Footer";
+import { assetUrl } from "../assetUrl";
 import { projects, type Project } from "../data/projects";
 import { technologies, type Technology } from "../data/techShowcase";
 
@@ -192,7 +193,7 @@ function ProjectSlideCover({
       {showPhoto ? (
         <img
           key={project.coverImage}
-          src={project.coverImage}
+          src={assetUrl(project.coverImage)}
           alt=""
           className="absolute inset-0 z-[1] h-full w-full object-cover object-center"
           loading="lazy"
@@ -1352,7 +1353,7 @@ export default function WesLanding({ onBack }: WesLandingProps) {
           <div className="about-content">
             <div className="about-card">
               <img
-                src="/textures/eu.jpg"
+                src={assetUrl("/textures/eu.jpg")}
                 alt="Foto de perfil de Wesley"
                 width={360}
                 height={480}
