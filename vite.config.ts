@@ -5,10 +5,9 @@ import path from "node:path";
 import { defineConfig } from "vite";
 import { CONTACT } from "./src/contact";
 
-// Produção: deploy na raiz (gh-pages + domínio customizado, ex.: https://bbs.wes.dev/).
-// base "/" — assets em /assets/... sem subpath do repositório.
+// Produção: GitHub Pages padrão — subpath do repositório (ex.: /BBS-Portfolio-main/).
 export default defineConfig({
-  base: "/",
+  base: "/BBS-Portfolio-main/",
   build: {
     chunkSizeWarningLimit: 1000,
   },
