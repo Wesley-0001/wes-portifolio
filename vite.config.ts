@@ -5,10 +5,10 @@ import path from "node:path";
 import { defineConfig } from "vite";
 import { CONTACT } from "./src/contact";
 
-// GitHub Pages: URL https://<user>.github.io/<repo>/
-// O nome da pasta do repo tem de coincidir com este base (ex.: wes-portifolio).
+// Produção: deploy na raiz (gh-pages + domínio customizado, ex.: https://bbs.wes.dev/).
+// base "/" — assets em /assets/... sem subpath do repositório.
 export default defineConfig({
-  base: "/BBS-Portfolio-main/",
+  base: "/",
   build: {
     chunkSizeWarningLimit: 1000,
   },
