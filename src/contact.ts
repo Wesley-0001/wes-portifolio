@@ -8,3 +8,7 @@ export const CONTACT = {
 } as const;
 
 export const CONTACT_SITE_URL = `https://${CONTACT.site}`;
+
+/** Portfólio visual 3D (repositório separado wes-portifolio) — usado pelo terminal ao abrir a interface gráfica */
+export const WES_3D_PORTFOLIO_URL =
+  "https://wesley-0001.github.io/wes-portifolio/" as const;

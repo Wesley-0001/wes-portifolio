@@ -8,10 +8,8 @@ import {
   User,
 } from "lucide-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { CONTACT } from "./contact";
+import { CONTACT, WES_3D_PORTFOLIO_URL } from "./contact";
 import { projects } from "./data/projects";
-import WesLanding from "./site/WesLanding";
-import VerboGame from "./games/verbo/VerboGame";
 
 type LineVariant =
   | "normal"
@@ -40,8 +38,7 @@ type QueueAction =
   | { type: "pause"; ms: number }
   | { type: "clear" }
   | { type: "boot_complete" }
-  | { type: "switch_site" }
-  | { type: "switch_termo" };
+  | { type: "open_url"; href: string };
 
 const COMMANDS = [
   "home",
@@ -56,6 +53,8 @@ const COMMANDS = [
   "sound",
 ];
 
+const UPTIME_TZ_LINE = "tz: sao paulo · sp";
+
 const THEMES = {
   aizen: { bg: "#0b0f14", fg: "#c4cad1", accent: "#7bb531" },
   green: { bg: "#0a0e12", fg: "#00ff41", accent: "#00ff41" },
@@ -64,7 +63,6 @@ const THEMES = {
 };
 
 export default function App() {
-  const [mode, setMode] = useState<"bbs" | "site" | "termo">("bbs");
   const [output, setOutput] = useState<TerminalLine[]>([]);
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<string[]>([]);
@@ -74,8 +72,6 @@ export default function App() {
   const [currentTheme, setCurrentTheme] =
     useState<keyof typeof THEMES>("aizen");
   const [soundEnabled, setSoundEnabled] = useState(false);
-  const [bbsFadeOut, setBbsFadeOut] = useState(false);
-
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const queueRef = useRef<QueueAction[]>([]);
@@ -127,16 +123,8 @@ export default function App() {
       setOutput([]);
     } else if (action.type === "boot_complete") {
       setIsBooting(false);
-    } else if (action.type === "switch_site") {
-      setBbsFadeOut(true);
-      await new Promise((r) => setTimeout(r, 450));
-      setMode("site");
-      setBbsFadeOut(false);
-    } else if (action.type === "switch_termo") {
-      setBbsFadeOut(true);
-      await new Promise((r) => setTimeout(r, 450));
-      setMode("termo");
-      setBbsFadeOut(false);
+    } else if (action.type === "open_url") {
+      window.open(action.href, "_blank", "noopener,noreferrer");
     }
 
     setIsTyping(false);
@@ -249,7 +237,7 @@ export default function App() {
             speed: 18,
           },
           { type: "pause", ms: 520 },
-          { type: "switch_site" },
+          { type: "open_url", href: WES_3D_PORTFOLIO_URL },
         ]);
         break;
       case "clear":
@@ -374,18 +362,29 @@ export default function App() {
               speed: 18,
             },
             { type: "pause", ms: 520 },
-            { type: "switch_site" },
+            { type: "open_url", href: WES_3D_PORTFOLIO_URL },
           ]);
         } else if (id === "02") {
           enqueue([
             {
               type: "line",
-              text: "loading termo...",
+              text: "TERMO runs as a separate React app (Termo project folder).",
               variant: "info",
               speed: 18,
             },
-            { type: "pause", ms: 520 },
-            { type: "switch_termo" },
+            { type: "pause", ms: 400 },
+            {
+              type: "line",
+              text: "open that workspace to play — it is no longer embedded here.",
+              variant: "muted",
+              speed: 14,
+            },
+            {
+              type: "line",
+              text: "\nhome for commands.",
+              variant: "muted",
+              instant: true,
+            },
           ]);
         } else if (id === "03") {
           enqueue([
@@ -510,7 +509,7 @@ export default function App() {
             text: `local: ${now.toLocaleTimeString()} ${now.toLocaleDateString()}`,
             speed: 10,
           },
-          { type: "line", text: `tz: brazil · brasilia`, speed: 10 },
+          { type: "line", text: UPTIME_TZ_LINE, speed: 10 },
           {
             type: "line",
             text: "\nhome for commands.",
@@ -817,34 +816,9 @@ export default function App() {
     return <span>{elements}</span>;
   };
 
-  if (mode === "termo") {
-    return (
-      <>
-        <button
-          type="button"
-          onClick={() => setMode("bbs")}
-          className="fixed top-7 right-7 z-50 px-5 py-2.5 text-sm font-medium tracking-wide rounded-full border border-white/10 bg-white/[0.06] backdrop-blur-md text-neutral-200/95 shadow-sm transition-[background-color,border-color,color,transform,box-shadow] duration-200 ease-out hover:bg-white/10 hover:border-white/18 hover:shadow-md active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/25"
-        >
-          ⌘ terminal
-        </button>
-        <VerboGame />
-      </>
-    );
-  }
-
-  if (mode === "site") {
-    return (
-      <WesLanding
-        onBack={() => setMode("bbs")}
-      />
-    );
-  }
-
   return (
     <div
-      className={`h-screen w-full flex flex-col p-6 md:p-12 relative overflow-hidden transition-opacity duration-500 ease-out ${
-        bbsFadeOut ? "opacity-0 pointer-events-none" : "opacity-100"
-      }`}
+      className="h-screen w-full flex flex-col p-6 md:p-12 relative overflow-hidden transition-opacity duration-500 ease-out opacity-100"
       style={{
         backgroundColor: THEMES[currentTheme].bg,
         color: THEMES[currentTheme].fg,
@@ -860,7 +834,7 @@ export default function App() {
         <div className="flex items-center gap-3">
           <TerminalIcon size={24} className="text-aizen-green" />
           <span className="text-lg tracking-wide opacity-80">
-            wes@interface: ~
+            wes@bbs: ~
           </span>
         </div>
         <div className="flex gap-6 text-sm opacity-50 tracking-tight">
@@ -874,14 +848,21 @@ export default function App() {
         className="flex-1 overflow-y-auto min-h-0 z-10 scroll-smooth pr-4 crt-flicker mb-4"
       >
         <div className="space-y-[0.65rem] leading-[1.58]">
-          {output.map((line) => (
-            <div
-              key={line.id}
-              className={`whitespace-pre-wrap ${getLineClass(line.variant)}`}
-            >
-              {renderLineContent(line)}
-            </div>
-          ))}
+          {output.map((line) => {
+            const lineClass = `block whitespace-pre-wrap ${getLineClass(line.variant)}`;
+            if (line.text.trimStart().startsWith("tz:")) {
+              return (
+                <span key={line.id} className={lineClass}>
+                  {line.text}
+                </span>
+              );
+            }
+            return (
+              <div key={line.id} className={lineClass}>
+                {renderLineContent(line)}
+              </div>
+            );
+          })}
 
           {!isBooting && (
             <div className="flex items-center gap-3 pt-4">

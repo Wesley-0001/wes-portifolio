@@ -8,7 +8,7 @@ import { CONTACT } from "./src/contact";
 // GitHub Pages: URL https://<user>.github.io/<repo>/
 // O nome da pasta do repo tem de coincidir com este base (ex.: wes-portifolio).
 export default defineConfig({
-  base: "/wes-portifolio/",
+  base: "/BBS-Portfolio-main/",
   build: {
     chunkSizeWarningLimit: 1000,
   },
@@ -45,5 +45,9 @@ export default defineConfig({
     // HMR is disabled in AI Studio via DISABLE_HMR env var.
     // Do not modify — file watching is disabled to prevent flickering during agent edits.
     hmr: process.env.DISABLE_HMR !== "true",
+    /** Evita que o browser sirva módulos antigos em cache ao dar F5 no dev server. */
+    headers: {
+      "Cache-Control": "no-store",
+    },
   },
 });

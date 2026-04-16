@@ -1,4 +1,4 @@
-import { CONTACT_SITE_URL } from "../contact";
+import { WES_3D_PORTFOLIO_URL } from "../contact";
 
 export type ProjectStatus = "live" | "in_progress";
 
@@ -25,14 +25,14 @@ const projectsData: Project[] = [
     category: "web",
     tags: ["PROJETO REAL", "REACT", "VITE"],
     coverImage: "/screenshots/wes-portfolio.jpg",
-    link: CONTACT_SITE_URL,
+    link: WES_3D_PORTFOLIO_URL,
     status: "live",
   },
   {
     id: "termo",
     title: "TERMO",
     description:
-      "word game (Portuguese Wordle-style) shipped inside this shell — same identity as the terminal, deliberate break from résumé mode.",
+      "Portuguese Wordle-style word game — React + TypeScript; ships as a standalone app alongside the portfolio.",
     category: "game",
     tags: ["PROJETO REAL", "REACT", "TYPESCRIPT"],
     coverImage: "/screenshots/termo.gif",
